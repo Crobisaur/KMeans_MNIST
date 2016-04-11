@@ -2,6 +2,7 @@ __author__ = 'Christo Robison'
 
 import numpy as np
 import scipy as sci
+import h5py
 from PIL import Image
 import os
 
@@ -31,3 +32,8 @@ def readMnist(path = '/home/crob/Downloads/mnist/train'):
 
 if __name__ == '__main__':
     s = readMnist()
+    print(np.shape(s))
+    path = '/home/crob/Downloads/mnist'
+    f = h5py.File("mnist_NP.h5","w")
+    f.create_dataset('mnist_numpy', data=s)
+    f.close()

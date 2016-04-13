@@ -70,7 +70,7 @@ def bench_k_means(estimator, name, data):
     imgplot = plt.imshow(a)
 
 # Insert code for PCA
-n_comp=20
+n_comp=5
 pca = decomposition.PCA(n_components=n_comp)
 out = pca.fit(temp)
 xtrain = pca.transform(temp)
@@ -106,6 +106,30 @@ for i in range(len(b)):
         labelbottom='off',
         labelleft='off')
     imgp=plt.imshow(b[i,:,:])
+    plt.set_cmap('gray')
+plt.suptitle('%i KMeans Centroids of MNIST Dataset' % len(b))
+plt.show()
+
+example = temp[1,:]
+ex = pca.inverse_transform(example)
+print(np.shape(ex))
+example = ex.components_.reshape(28,28)
+print(np.shape(example))
+
+
+for i in range(len(b)):
+    plt.subplot(5,len(b)/5,i)
+    plt.tick_params(
+        axis='both',
+        which='both',
+        bottom='off',
+        top='off',
+        left='off',
+        right='off',
+        labelbottom='off',
+        labelleft='off')
+    c = b[i,:,:]*example
+    imgp=plt.imshow(c)
     plt.set_cmap('gray')
 plt.suptitle('%i KMeans Centroids of MNIST Dataset' % len(b))
 plt.show()

@@ -3,7 +3,7 @@ print(__doc__)
 from time import time
 import numpy as np
 import matplotlib.pyplot as plt
-
+import h5py
 from sklearn import metrics
 from sklearn.cluster import KMeans
 from sklearn.datasets import load_digits
@@ -11,7 +11,12 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import scale
 import readMnist
 #temp = mnist.read('train', '/home/crob/Downloads/mnist/')
-temp = readMnist.readMnist()
+#temp = readMnist.readMnist()
+
+f = h5py.File('mnist_NP.h5','r')
+temp = f['mnist_numpy'][:]
+f.close()
+
 #im = np.ndarray
 #for img in temp:
  #   im.append(img)
@@ -26,7 +31,7 @@ n_samples = len(temp)
 n_features = np.size(temp[1])
 
 #n_digits = len(np.unique(digits.target))
-n_digits = 10
+n_digits = 40
 #labels = digits.target
 
 sample_size = 300
@@ -70,6 +75,10 @@ b = np.reshape(estimator.cluster_centers_,(n_digits,28,28))
 #cent = np.reshape(a,(28,28))
 #imgplot = plt.imshow(cent)
 np.shape(b)
+if n_digits == 40:
+    outf = h5py.File('mnist40_Centroids.h5','w')
+    outf.create_dataset('mnist40_Centroids_numpy', data=estimator.cluster_centers_)
+    outf.close()
 
 for i in range(len(b)):
     plt.subplot(5,len(b)/5,i)

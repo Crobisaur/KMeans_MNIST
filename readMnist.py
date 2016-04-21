@@ -5,6 +5,7 @@ import scipy as sci
 import h5py
 from PIL import Image
 import os
+import collections
 
 '''THis program reads in the entire MNist dataset'''
 
@@ -13,7 +14,8 @@ def readMnist(path = '/home/crob/Downloads/mnist/train'):
     dataDir = '/home/crob/Downloads/mnist/train/'
     #m = np.ndarray()
     a = []
-    for root, dirs, files in os.walk(dataDir):
+    l = []
+    for root, dirs, files in os.walk(path):
         for name in files:
             if name.endswith(".png"):
                 #a = sci.ndimage.imread(name, True)
@@ -24,16 +26,21 @@ def readMnist(path = '/home/crob/Downloads/mnist/train'):
                 #print(im.shape)
                 #print(im)
                 a.append(np.reshape(im, 784))
+                l.append(root.replace(path+'/',''))
+                #print(root.replace(path+'/',''))
 
     print(len(a))
     p = np.array(a)
     print(p.shape)
-    return p
+    out = collections.namedtuple('examples',['data', 'label'])
+    o = out(data=p, label=l)
+    return o
 
 if __name__ == '__main__':
-    s = readMnist()
-    print(np.shape(s))
     path = '/home/crob/Downloads/mnist'
-    f = h5py.File("mnist_NP.h5","w")
-    f.create_dataset('mnist_numpy', data=s)
+    s = readMnist(path+'/test')
+    print(np.shape(s.data))
+    f = h5py.File("mnist_test.h5","w")
+    f.create_dataset('data', data=s.data)
+    f.create_dataset('labels', data=s.label)
     f.close()
